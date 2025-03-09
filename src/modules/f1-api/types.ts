@@ -46,7 +46,7 @@ type ResponseData<T extends object> = {
     MRData: CommonMRData & T
 }
 
-type Race = {
+export type Race = {
     season: string
     round: string
     url?: string

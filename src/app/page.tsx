@@ -4,6 +4,7 @@ import { DriverPredict } from '@/components/DriverPredict'
 import { NoUpcomingRace } from '@/components/NoUpcomingRace'
 import { getDrivers, getRaces } from '@/modules/f1-api/getters'
 import { prisma } from '@/prisma'
+import { getPredictionDeadline } from '@/utils/utils'
 import { revalidatePath } from 'next/cache'
 import Image from 'next/image'
 
@@ -17,10 +18,7 @@ export default async function Home() {
         return <NoUpcomingRace />
     }
 
-    const predictionDeadline = new Date(
-        new Date(`${upcomingRace.date}T${upcomingRace.time}`).getTime() -
-            1000 * 60 * 60 * 72
-    )
+    const predictionDeadline = getPredictionDeadline(upcomingRace)
 
     const drivers = await getDrivers(currentYear)
 

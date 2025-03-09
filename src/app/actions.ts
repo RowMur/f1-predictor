@@ -3,6 +3,7 @@
 import { auth } from '@/auth'
 import { getRaces } from '@/modules/f1-api/getters'
 import { prisma } from '@/prisma'
+import { getPredictionDeadline } from '@/utils/utils'
 import { revalidatePath } from 'next/cache'
 
 export const predict = async (driverId: string) => {
@@ -19,6 +20,11 @@ export const predict = async (driverId: string) => {
     const upcomingRace = races.find((r) => r.date > new Date().toISOString())
     if (!upcomingRace) {
         throw new Error('No upcoming races')
+    }
+
+    const predictionDeadline = getPredictionDeadline(upcomingRace)
+    if (new Date() > predictionDeadline) {
+        throw new Error('Predictions closed')
     }
 
     await prisma.prediction.create({
