@@ -58,7 +58,7 @@ export default async function RootLayout({
                         )}
                     </div>
                 </nav>
-                <main>{children}</main>
+                <main className="mt-8">{children}</main>
             </body>
         </html>
     )

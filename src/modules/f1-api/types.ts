@@ -91,7 +91,7 @@ export type ConstructorsResponseData = ResponseData<{
     ConstructorTable: ConstructorTable
 }>
 
-type Driver = {
+export type Driver = {
     driverId: string
     permanentNumber?: string
     code?: string

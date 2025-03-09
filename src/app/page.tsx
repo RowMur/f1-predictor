@@ -1,49 +1,61 @@
+import { auth } from '@/auth'
+import { DriverPredict } from '@/components/DriverPredict'
 import { getDrivers, getRaces } from '@/modules/f1-api/getters'
+import { prisma } from '@/prisma'
 import Image from 'next/image'
 
 export default async function Home() {
+    const session = await auth()
     const currentYear = new Date().getFullYear()
     const races = await getRaces(currentYear)
     const upcomingRace = races.find((r) => r.date > new Date().toISOString())
     const drivers = await getDrivers(currentYear)
-    console.log(drivers)
+
+    const userPrediction = await prisma.prediction.findFirst({
+        where: {
+            userId: session?.user?.id || '',
+            round: upcomingRace?.round,
+            season: currentYear.toString(),
+        },
+    })
+
+    const predictedDriver = drivers.find(
+        (d) => d.driverId === userPrediction?.driverId
+    )
+
     return (
-        <div className="flex items-center flex-col">
-            <div className="bg-light-gray max-w-96 mx-6 my-16 p-6 rounded-lg">
-                {upcomingRace ? (
-                    <>
-                        <h2 className="font-bold mb-1">
-                            Upcoming Race - {upcomingRace.raceName}
-                        </h2>
-                        <div className="text-gray flex flex-wrap">
-                            <span className="mr-2">
-                                Round {upcomingRace.round}
-                            </span>
-                            <span className="mr-2">
-                                {upcomingRace.Circuit.circuitName}
-                            </span>
-                        </div>
-                    </>
-                ) : (
-                    <h2 className="font-bold">No upcoming races</h2>
-                )}
-            </div>
-            <div>
-                <h2 className="font-bold">Drivers</h2>
-                <ul className="flex flex-wrap max-w-96">
-                    {drivers.map((driver) => (
-                        <li key={driver.driverId}>
-                            {driver.givenName} {driver.familyName}
-                            <Image
-                                src={`/drivers/${driver.driverId}.avif`}
-                                alt={`${driver.givenName}'s picture`}
-                                width={100}
-                                height={100}
-                            />
-                        </li>
-                    ))}
-                </ul>
-            </div>
+        <div className="mx-auto w-fit bg-light-gray p-8 rounded-2xl">
+            <h2 className="font-bold text-xl">
+                Next Race - {upcomingRace?.raceName}
+            </h2>
+            <p className="flex gap-2 text-dark">
+                <span>Round {upcomingRace?.round},</span>
+                <span>{upcomingRace?.Circuit.circuitName}</span>
+            </p>
+            {userPrediction && predictedDriver ? (
+                <>
+                    <h3 className="text-lg font-semibold mt-8">
+                        Your prediction
+                    </h3>
+                    <div className="flex gap-2 items-center mt-4">
+                        <Image
+                            src={`/drivers/${userPrediction.driverId}.avif`}
+                            alt={userPrediction.driverId}
+                            className="rounded-full object-cover h-full"
+                            width={75}
+                            height={75}
+                        />
+                        <span>{predictedDriver.familyName}</span>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <h3 className="text-lg font-semibold mt-8">
+                        Select your winner
+                    </h3>
+                    <DriverPredict drivers={drivers} />
+                </>
+            )}
         </div>
     )
 }
