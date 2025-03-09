@@ -28,7 +28,5 @@ jobs:
               env:
                   DATABASE_URL: ${{ secrets.DATABASE_URL }}
             - name: Trigger deployment
-              env:
-                  TOKEN: ${{ secrets.COOLIFY_TOKEN }}
               run: |
-                  curl -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' "https://host.rowmur.dev/api/v1/deploy?uuid=n8kss8swckkg4gwgoo4gs8os&force=false"
+                  curl -H 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}' -H 'Content-Type: application/json' "https://host.rowmur.dev/api/v1/deploy?uuid=n8kss8swckkg4gwgoo4gs8os&force=false"
