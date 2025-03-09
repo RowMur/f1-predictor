@@ -1,4 +1,8 @@
-import { DriversResponseData, RaceResponseData } from './types'
+import {
+    DriversResponseData,
+    RaceResponseData,
+    ResultsResponseData,
+} from './types'
 import { endpoint } from './constants'
 
 export const getRaces = async (year: number) => {
@@ -15,4 +19,12 @@ export const getDrivers = async (year: number) => {
     })
     const body: DriversResponseData = await res.json()
     return body.MRData.DriverTable.Drivers
+}
+
+export const getRaceResults = async (year: number) => {
+    const res = await fetch(`${endpoint}/${year}/results/`, {
+        cache: 'force-cache',
+    })
+    const body: ResultsResponseData = await res.json()
+    return body.MRData.RaceTable.Races
 }

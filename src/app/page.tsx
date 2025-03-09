@@ -8,6 +8,8 @@ import { getPredictionDeadline } from '@/utils/utils'
 import { revalidatePath } from 'next/cache'
 import Image from 'next/image'
 
+export const revalidate = 3600
+
 export default async function Home() {
     const session = await auth()
     const currentYear = new Date().getFullYear()
