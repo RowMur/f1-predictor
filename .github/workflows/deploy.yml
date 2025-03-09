@@ -31,6 +31,4 @@ jobs:
               env:
                   TOKEN: ${{ secrets.COOLIFY_TOKEN }}
               run: |
-                  curl https://host.rowmur.dev/api/v1/deploy?uuid=n8kss8swckkg4gwgoo4gs8os&force=false \
-                      --header 'Authorization: Bearer $TOKEN' \
-                      --header 'Content-Type: application/json'
+                  curl https://host.rowmur.dev/api/v1/deploy?uuid=n8kss8swckkg4gwgoo4gs8os&force=false --header 'Authorization: Bearer $TOKEN' --header 'Content-Type: application/json'
