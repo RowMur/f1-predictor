@@ -2,8 +2,6 @@ name: Deploy
 on:
     workflow_dispatch:
     push:
-        paths:
-            - prisma/migrations/**
         branches:
             - master
 
@@ -18,7 +16,21 @@ jobs:
             - uses: pnpm/action-setup@v4
             - name: Install dependencies
               run: pnpm install
+            - uses: dorny/paths-filter@v3
+              id: filter
+              with:
+                  filters: |
+                      prisma:
+                        - 'prisma/migrations/**'
             - name: Apply all pending migrations to the database
+              if: steps.filter.outputs.prisma == 'true'
               run: npx prisma migrate deploy
               env:
                   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            - name: Trigger deployment
+              env:
+                  TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+              run: |
+                  curl https://host.rowmur.dev/api/v1/deploy?uuid=n8kss8swckkg4gwgoo4gs8os&force=false \
+                      --header 'Authorization: Bearer $TOKEN' \
+                      --header 'Content-Type: application/json'
