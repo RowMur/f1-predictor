@@ -3,6 +3,7 @@
 import { auth } from '@/auth'
 import { getRaces } from '@/modules/f1-api/getters'
 import { prisma } from '@/prisma'
+import { revalidatePath } from 'next/cache'
 
 export const predict = async (driverId: string) => {
     console.log('Predicting', driverId)
@@ -29,5 +30,6 @@ export const predict = async (driverId: string) => {
         },
     })
 
+    revalidatePath('/')
     return true
 }
