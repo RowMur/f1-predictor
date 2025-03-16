@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type TimeLeft = {
     days: number
@@ -16,11 +16,16 @@ export const Countdown = (props: Props) => {
     const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
         calculateTimeLeft(props.endDate, () => {})
     )
-    const interval = setInterval(() => {
-        setTimeLeft(
-            calculateTimeLeft(props.endDate, () => clearInterval(interval))
-        )
-    }, 60000)
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTimeLeft(
+                calculateTimeLeft(props.endDate, () => clearInterval(interval))
+            )
+        }, 60000)
+
+        return () => clearInterval(interval)
+    }, [props.endDate])
     return (
         <>
             <div>

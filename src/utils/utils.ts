@@ -1,7 +1,10 @@
 import { auth } from '@/auth'
 import { getRaceResults } from '@/modules/f1-api/getters'
-import { Race } from '@/modules/f1-api/types'
+import { Race, RaceResult } from '@/modules/f1-api/types'
 import { prisma } from '@/prisma'
+import { Prediction } from '@prisma/client'
+
+export const thisYear = new Date().getFullYear()
 
 export const getPredictionDeadline = (race: Race): Date =>
     new Date(
@@ -19,8 +22,6 @@ export const getSeasonPoints = async () => {
         return 0
     }
 
-    const thisYear = new Date().getFullYear()
-
     const predictions = await prisma.prediction.findMany({
         where: {
             season: thisYear.toString(),
@@ -29,7 +30,13 @@ export const getSeasonPoints = async () => {
     })
 
     const raceResults = await getRaceResults(thisYear)
+    return evaluatePredictions(predictions, raceResults)
+}
 
+export const evaluatePredictions = (
+    predictions: Prediction[],
+    raceResults: RaceResult[]
+) => {
     let points = 0
     for (const raceResult of raceResults) {
         const prediction = predictions.find((p) => p.round === raceResult.round)

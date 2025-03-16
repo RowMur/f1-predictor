@@ -4,6 +4,7 @@ import './globals.css'
 import { auth, signIn, signOut } from '@/auth'
 import { FaUser } from 'react-icons/fa'
 import { getSeasonPoints } from '@/utils/utils'
+import Link from 'next/link'
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -35,13 +36,17 @@ export default async function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <nav className="min-h-16 bg-red text-white justify-between flex items-center p-4 flex-wrap">
-                    <h1 className="font-bold text-3xl grow">F1 Predictor</h1>
-                    <div className="flex justify-between gap-3">
+                    <h1 className="font-bold text-3xl grow">
+                        <Link href={'/'}>F1 Predictor</Link>
+                    </h1>
+                    <div className="flex justify-between gap-3 items-center">
+                        <Link href="/leaderboard" className="hover:underline">
+                            Leaderboard
+                        </Link>
                         {session ? (
                             <>
-                                <div className="flex flex-col items-center justify-center">
-                                    <span>Season Points</span>
-                                    <span>{seasonPoints}</span>
+                                <div className="text-nowrap">
+                                    Season Points: {seasonPoints}
                                 </div>
                                 <button
                                     className="bg-dark rounded py-2 px-4 hover:cursor-pointer hover:bg-black flex gap-2 items-center"
@@ -51,7 +56,9 @@ export default async function RootLayout({
                                     }}
                                 >
                                     <FaUser />
-                                    <span>Sign out</span>
+                                    <span className="text-nowrap">
+                                        Sign out
+                                    </span>
                                 </button>
                             </>
                         ) : (
@@ -63,7 +70,7 @@ export default async function RootLayout({
                                 }}
                             >
                                 <FaUser />
-                                <span>Sign in</span>
+                                <span className="text-nowrap">Sign in</span>
                             </button>
                         )}
                     </div>

@@ -138,7 +138,7 @@ type Result = {
     }
 }
 
-type RaceResult = {
+export type RaceResult = {
     season: string
     round: string
     url: string

@@ -24,6 +24,9 @@ export const getDrivers = async (year: number) => {
 export const getRaceResults = async (year: number) => {
     const res = await fetch(`${endpoint}/${year}/results/`, {
         cache: 'force-cache',
+        next: {
+            revalidate: 3600,
+        },
     })
     const body: ResultsResponseData = await res.json()
     return body.MRData.RaceTable.Races
