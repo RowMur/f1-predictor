@@ -1,19 +1,24 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { auth, signIn, signOut } from '@/auth'
 import { FaUser } from 'react-icons/fa'
 import { getSeasonPoints } from '@/utils/utils'
 import Link from 'next/link'
+import localFont from 'next/font/local'
 
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin'],
+const torqueFont = localFont({
+    src: './fonts/Formula1-torque.otf',
+    variable: '--font-torque',
 })
 
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin'],
+const regularFont = localFont({
+    src: './fonts/Formula1-Regular.otf',
+    variable: '--font-regular',
+})
+
+const turboFont = localFont({
+    src: './fonts/Formula1-Turbo.otf',
+    variable: '--font-turbo',
 })
 
 export const metadata: Metadata = {
@@ -33,10 +38,10 @@ export default async function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={`${regularFont.variable} ${turboFont.variable} ${torqueFont.variable} antialiased`}
             >
                 <nav className="min-h-16 bg-red text-white justify-between flex items-center p-4 flex-wrap">
-                    <h1 className="font-bold text-3xl grow">
+                    <h1 className="font-bold font-torque text-3xl grow">
                         <Link href={'/'}>F1 Predictor</Link>
                     </h1>
                     <div className="flex justify-between gap-3 items-center">
